@@ -55,6 +55,13 @@ inline static double ufixed29_29(uint32_t v)
     return out;
 }
 
+inline static uint32_t ufixed29_29(double v)
+{
+    uint32_t out = (uint32_t) (v * (double)(0x1fffffff));
+
+    return out;
+}
+
 
 
 class CpcavFwAdapt;
@@ -172,6 +179,9 @@ protected:
 
 public:
     CpcavFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryImpl> ie);
+
+    virtual void setNCO(int cavity, double v);
+    virtual void setChanSel(int cavity, int probe, uint32_t channel);
 };
 
 
@@ -293,4 +303,45 @@ CpcavFwAdapt::CpcavFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryImpl> ie)
     cav2P2CalibCoeff_(  IScalVal   ::create(pPcavReg_->findByName("cav2P2CalibCoeff")))
 
 {
+}
+
+void CpcavFwAdapt::setNCO(int cavity, double v)
+{
+    uint32_t  out = ufixed29_29(v);
+
+    switch(cavity) {
+        case 0:
+            CPSW_TRY_CATCH(cav1NCOPhaseAdj_->setVal(out));
+            break;
+        case 1:
+            CPSW_TRY_CATCH(cav2NCOPhaseAdj_->setVal(out));
+            break;
+    }
+}
+
+
+void CpcavFwAdapt::setChanSel(int cavity, int probe, uint32_t channel)
+{
+    switch(cavity) {
+        case 0:
+            switch(probe) {
+                case 0:         // cavity 0, probe 0
+                    CPSW_TRY_CATCH(cav1P1ChanSel_->setVal(channel));
+                    break;
+                case 1:         // cavity 0, probe 1
+                    CPSW_TRY_CATCH(cav1P2ChanSel_->setVal(channel));
+                    break;
+            }
+            break;
+        case 1:
+            switch(probe) {
+                case 0:         // cavity 1, probe 0
+                    CPSW_TRY_CATCH(cav2P1ChanSel_->setVal(channel));
+                    break;
+                case 1:         // cavity 1, probe 1
+                    CPSW_TRY_CATCH(cav2P2ChanSel_->setVal(channel));
+                    break;
+            }
+            break;
+    }
 }
