@@ -91,8 +91,8 @@ protected:
     ScalVal       cav1P1ChanSel_;   // Channel Select for cavity 1 probe 1, unsigned fixed 4.0
     ScalVal_RO    cav1P1DCReal_;    // DC real part for cavity 1, probe 1, fixed 21.19
     ScalVal_RO    cav1P1DCImage_;   // DC imaginary part for cavity 1, probe 1, fixed 21.19
-    ScalVal_RO    cav1P1WindowStart_;    // Integration window start for cavity 1, probe 1, unsigned fixed 16.0
-    ScalVal_RO    cav1P1WindowStop_;     // Integration window stop for cavity 1, probe 1,  unsigned fixed 16.0
+    ScalVal       cav1P1WindowStart_;    // Integration window start for cavity 1, probe 1, unsigned fixed 16.0
+    ScalVal       cav1P1WindowStop_;     // Integration window stop for cavity 1, probe 1,  unsigned fixed 16.0
     ScalVal_RO    cav1P1DCFreq_;    // DC frequency for cavity 1, probe 1, fixed 26.0
     ScalVal_RO    cav1P1IntegI_;    // Integrated I for cavity 1, probe 1, fixed 18.17
     ScalVal_RO    cav1P1IntegQ_;    // Integrated Q for cavity 1, probe 1, fixed 18.17
@@ -115,8 +115,8 @@ protected:
     ScalVal       cav1P2ChanSel_;   // Channel Select for cavity 1 probe 2, unsigned fixed 4.0
     ScalVal_RO    cav1P2DCReal_;    // DC real part for cavity 1, probe 2, fixed 21.19
     ScalVal_RO    cav1P2DCImage_;   // DC imaginary part for cavity 1, probe 2, fixed 21.19
-    ScalVal_RO    cav1P2WindowStart_;    // Integration window start for cavity 1, probe 2, unsigned fixed 16.0
-    ScalVal_RO    cav1P2WindowStop_;     // Integration window stop for cavity 1, probe 2,  unsigned fixed 16.0
+    ScalVal       cav1P2WindowStart_;    // Integration window start for cavity 1, probe 2, unsigned fixed 16.0
+    ScalVal       cav1P2WindowStop_;     // Integration window stop for cavity 1, probe 2,  unsigned fixed 16.0
     ScalVal_RO    cav1P2DCFreq_;    // DC frequency for cavity 1, probe 2, fixed 26.0
     ScalVal_RO    cav1P2IntegI_;    // Integrated I for cavity 1, probe 2, fixed 18.17
     ScalVal_RO    cav1P2IntegQ_;    // Integrated Q for cavity 1, probe 2, fixed 18.17
@@ -138,8 +138,8 @@ protected:
     ScalVal       cav2P1ChanSel_;   // Channel Select for cavity 2 probe 1, unsigned fixed 4.0
     ScalVal_RO    cav2P1DCReal_;    // DC real part for cavity 2, probe 1, fixed 21.19
     ScalVal_RO    cav2P1DCImage_;   // DC imaginary part for cavity 2, probe 1, fixed 21.19
-    ScalVal_RO    cav2P1WindowStart_;    // Integration window start for cavity 2, probe 1, unsigned fixed 16.0
-    ScalVal_RO    cav2P1WindowStop_;     // Integration window stop for cavity 2, probe 1,  unsigned fixed 16.0
+    ScalVal       cav2P1WindowStart_;    // Integration window start for cavity 2, probe 1, unsigned fixed 16.0
+    ScalVal       cav2P1WindowStop_;     // Integration window stop for cavity 2, probe 1,  unsigned fixed 16.0
     ScalVal_RO    cav2P1DCFreq_;    // DC frequency for cavity 2, probe 1, fixed 26.0
     ScalVal_RO    cav2P1IntegI_;    // Integrated I for cavity 2, probe 1, fixed 18.17
     ScalVal_RO    cav2P1IntegQ_;    // Integrated Q for cavity 2, probe 1, fixed 18.17
@@ -162,8 +162,8 @@ protected:
     ScalVal       cav2P2ChanSel_;   // Channel Select for cavity 2 probe 2, unsigned fixed 4.0
     ScalVal_RO    cav2P2DCReal_;    // DC real part for cavity 2, probe 2, fixed 21.19
     ScalVal_RO    cav2P2DCImage_;   // DC imaginary part for cavity 2, probe 2, fixed 21.19
-    ScalVal_RO    cav2P2WindowStart_;    // Integration window start for cavity 2, probe 2, unsigned fixed 16.0
-    ScalVal_RO    cav2P2WindowStop_;     // Integration window stop for cavity 2, probe 2,  unsigned fixed 16.0
+    ScalVal       cav2P2WindowStart_;    // Integration window start for cavity 2, probe 2, unsigned fixed 16.0
+    ScalVal       cav2P2WindowStop_;     // Integration window stop for cavity 2, probe 2,  unsigned fixed 16.0
     ScalVal_RO    cav2P2DCFreq_;    // DC frequency for cavity 2, probe 2, fixed 26.0
     ScalVal_RO    cav2P2IntegI_;    // Integrated I for cavity 2, probe 2, fixed 18.17
     ScalVal_RO    cav2P2IntegQ_;    // Integrated Q for cavity 2, probe 2, fixed 18.17
@@ -180,8 +180,39 @@ protected:
 public:
     CpcavFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryImpl> ie);
 
+    /* config for reference */
+    virtual void setRefSel(uint32_t channel);
+    virtual void setRefWindowStart(uint32_t start);
+    virtual void setRefWindowEnd(uint32_t end);
+
+    /* config for cavity and probe */
     virtual void setNCO(int cavity, double v);
     virtual void setChanSel(int cavity, int probe, uint32_t channel);
+    virtual void setWindowStart(int cavity, int probe, uint32_t start);
+    virtual void setWindowEnd(int cavity, int probe, uint32_t end);
+    virtual void setCalibCoeff(int cavity, int probe, uint32_t v);
+
+    /* monitor for reference */
+    virtual double getRefAmpl(int32_t *raw);
+    virtual double getRefPhase(int32_t *raw);
+    virtual double getRefI(int32_t *raw);
+    virtual double getRefQ(int32_t *raw);
+
+    /* monitor for cavity and probe */
+    virtual double getIfAmpl(int cavity, int probe, int32_t *raw);
+    virtual double getIfPhase(int cavity, int probe, int32_t *raw);
+    virtual double getIfI(int cavity, int probe, int32_t *raw);
+    virtual double getIfQ(int cavity, int probe, int32_t *raw);
+    virtual double getDCReal(int cavity, int probe, int32_t *raw);
+    virtual double getDCImage(int cavity, int probe, int32_t *raw);
+    virtual double getDCFreq(int cavity, int probe, int32_t *raw);
+    virtual double getIntegI(int cavity, int probe, int32_t *raw);
+    virtual double getIntegQ(int cavity, int probe, int32_t *raw);
+    virtual double getOutPhase(int cavity, int probe, int32_t *raw);
+    virtual double getOutAmpl(int cavity, int probe, int32_t *raw);
+    virtual double getCompI(int cavity, int probe, int32_t *raw);
+    virtual double getCompQ(int cavity, int probe, int32_t *raw);
+    virtual double getCompPhase(int cavity, int probe, int32_t *raw);
 };
 
 
@@ -213,8 +244,8 @@ CpcavFwAdapt::CpcavFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryImpl> ie)
     cav1P1ChanSel_(     IScalVal   ::create(pPcavReg_->findByName("cav1P1ChanSel"))),
     cav1P1DCReal_(      IScalVal_RO::create(pPcavReg_->findByName("cav1P1DCReal"))),
     cav1P1DCImage_(     IScalVal_RO::create(pPcavReg_->findByName("cav1P1Image"))),
-    cav1P1WindowStart_( IScalVal_RO::create(pPcavReg_->findByName("cav1P1WindowStart"))),
-    cav1P1WindowStop_(  IScalVal_RO::create(pPcavReg_->findByName("cav1P1WindowStop"))),
+    cav1P1WindowStart_( IScalVal   ::create(pPcavReg_->findByName("cav1P1WindowStart"))),
+    cav1P1WindowStop_(  IScalVal   ::create(pPcavReg_->findByName("cav1P1WindowStop"))),
     cav1P1DCFreq_(      IScalVal_RO::create(pPcavReg_->findByName("cav1P1DCFreq"))),
     cav1P1IntegI_(      IScalVal_RO::create(pPcavReg_->findByName("cav1P1IntegI"))),
     cav1P1IntegQ_(      IScalVal_RO::create(pPcavReg_->findByName("cav1P1IntegQ"))),
@@ -239,8 +270,8 @@ CpcavFwAdapt::CpcavFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryImpl> ie)
     cav1P2ChanSel_(     IScalVal   ::create(pPcavReg_->findByName("cav1P2ChanSel"))),
     cav1P2DCReal_(      IScalVal_RO::create(pPcavReg_->findByName("cav1P2DCReal"))),
     cav1P2DCImage_(     IScalVal_RO::create(pPcavReg_->findByName("cav1P2Image"))),
-    cav1P2WindowStart_( IScalVal_RO::create(pPcavReg_->findByName("cav1P2WindowStart"))),
-    cav1P2WindowStop_(  IScalVal_RO::create(pPcavReg_->findByName("cav1P2WindowStop"))),
+    cav1P2WindowStart_( IScalVal   ::create(pPcavReg_->findByName("cav1P2WindowStart"))),
+    cav1P2WindowStop_(  IScalVal   ::create(pPcavReg_->findByName("cav1P2WindowStop"))),
     cav1P2DCFreq_(      IScalVal_RO::create(pPcavReg_->findByName("cav1P2DCFreq"))),
     cav1P2IntegI_(      IScalVal_RO::create(pPcavReg_->findByName("cav1P2IntegI"))),
     cav1P2IntegQ_(      IScalVal_RO::create(pPcavReg_->findByName("cav1P2IntegQ"))),
@@ -263,8 +294,8 @@ CpcavFwAdapt::CpcavFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryImpl> ie)
     cav2P1ChanSel_(     IScalVal   ::create(pPcavReg_->findByName("cav2P1ChanSel"))),
     cav2P1DCReal_(      IScalVal_RO::create(pPcavReg_->findByName("cav2P1DCReal"))),
     cav2P1DCImage_(     IScalVal_RO::create(pPcavReg_->findByName("cav2P1Image"))),
-    cav2P1WindowStart_( IScalVal_RO::create(pPcavReg_->findByName("cav2P1WindowStart"))),
-    cav2P1WindowStop_(  IScalVal_RO::create(pPcavReg_->findByName("cav2P1WindowStop"))),
+    cav2P1WindowStart_( IScalVal   ::create(pPcavReg_->findByName("cav2P1WindowStart"))),
+    cav2P1WindowStop_(  IScalVal   ::create(pPcavReg_->findByName("cav2P1WindowStop"))),
     cav2P1DCFreq_(      IScalVal_RO::create(pPcavReg_->findByName("cav2P1DCFreq"))),
     cav2P1IntegI_(      IScalVal_RO::create(pPcavReg_->findByName("cav2P1IntegI"))),
     cav2P1IntegQ_(      IScalVal_RO::create(pPcavReg_->findByName("cav2P1IntegQ"))),
@@ -289,8 +320,8 @@ CpcavFwAdapt::CpcavFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryImpl> ie)
     cav2P2ChanSel_(     IScalVal   ::create(pPcavReg_->findByName("cav2P2ChanSel"))),
     cav2P2DCReal_(      IScalVal_RO::create(pPcavReg_->findByName("cav2P2DCReal"))),
     cav2P2DCImage_(     IScalVal_RO::create(pPcavReg_->findByName("cav2P2Image"))),
-    cav2P2WindowStart_( IScalVal_RO::create(pPcavReg_->findByName("cav2P2WindowStart"))),
-    cav2P2WindowStop_(  IScalVal_RO::create(pPcavReg_->findByName("cav2P2WindowStop"))),
+    cav2P2WindowStart_( IScalVal   ::create(pPcavReg_->findByName("cav2P2WindowStart"))),
+    cav2P2WindowStop_(  IScalVal   ::create(pPcavReg_->findByName("cav2P2WindowStop"))),
     cav2P2DCFreq_(      IScalVal_RO::create(pPcavReg_->findByName("cav2P2DCFreq"))),
     cav2P2IntegI_(      IScalVal_RO::create(pPcavReg_->findByName("cav2P2IntegI"))),
     cav2P2IntegQ_(      IScalVal_RO::create(pPcavReg_->findByName("cav2P2IntegQ"))),
@@ -305,15 +336,42 @@ CpcavFwAdapt::CpcavFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryImpl> ie)
 {
 }
 
+//
+//
+/* config for  reference */
+//
+//
+
+void CpcavFwAdapt::setRefSel(uint32_t channel)
+{
+    CPSW_TRY_CATCH(rfRefSel_->setVal(channel));
+}
+
+void CpcavFwAdapt::setRefWindowStart(uint32_t start)
+{
+    CPSW_TRY_CATCH(refWindowStart_->setVal(start));
+}
+
+void CpcavFwAdapt::setRefWindowEnd(uint32_t end)
+{
+    CPSW_TRY_CATCH(refWindowStop_->setVal(end));
+}
+
+//
+//
+/* config for cavity and probe */
+//
+//
+
 void CpcavFwAdapt::setNCO(int cavity, double v)
 {
     uint32_t  out = ufixed29_29(v);
 
     switch(cavity) {
-        case 0:
+        case 0:    // cavity 0
             CPSW_TRY_CATCH(cav1NCOPhaseAdj_->setVal(out));
             break;
-        case 1:
+        case 1:    // cavity 1
             CPSW_TRY_CATCH(cav2NCOPhaseAdj_->setVal(out));
             break;
     }
@@ -345,3 +403,587 @@ void CpcavFwAdapt::setChanSel(int cavity, int probe, uint32_t channel)
             break;
     }
 }
+
+void CpcavFwAdapt::setWindowStart(int cavity, int probe, uint32_t start)
+{
+    switch(cavity) {
+        case 0:
+            switch(probe) {
+                case 0:    // cavity 0, probe 0
+                    CPSW_TRY_CATCH(cav1P1WindowStart_->setVal(start));
+                    break;
+                case 1:    // cavity 0, probe 1
+                    CPSW_TRY_CATCH(cav1P2WindowStart_->setVal(start));
+                    break;
+            }
+            break;
+        case 1:
+            switch(probe) {
+                case 0:    // cavity 1, probe 0
+                    CPSW_TRY_CATCH(cav2P1WindowStart_->setVal(start));
+                    break;
+                case 1:    // cavity 1, probe 1
+                    CPSW_TRY_CATCH(cav2P2WindowStart_->setVal(start));
+                    break;
+            }
+            break;
+    }
+}
+
+void CpcavFwAdapt::setWindowEnd(int cavity, int probe, uint32_t end)
+{
+
+    switch(cavity) {
+        case 0:
+            switch(probe) {
+                case 0:    // cavity 0, probe 0
+                    CPSW_TRY_CATCH(cav1P1WindowStop_->setVal(end));
+                    break;
+                case 1:    // cavity 0, probe 1
+                    CPSW_TRY_CATCH(cav1P2WindowStop_->setVal(end));
+                    break;
+            }
+            break;
+        case 1:
+            switch(probe) {
+                case 0:    // cavity 1, probe 0
+                    CPSW_TRY_CATCH(cav2P1WindowStop_->setVal(end));
+                    break;
+                case 1:    // cavity 1, probe 1
+                    CPSW_TRY_CATCH(cav2P2WindowStop_->setVal(end));
+                    break;
+            }
+            break;
+    }
+}
+
+void CpcavFwAdapt::setCalibCoeff(int cavity, int probe, uint32_t v)
+{
+    switch(cavity) {
+        case 0:
+            switch(probe) {
+                case 0:    // cavity 0, probe 0
+                    CPSW_TRY_CATCH(cav1P1CalibCoeff_->setVal(v));
+                    break;
+                case 1:    // cavity 0, probe 1
+                    CPSW_TRY_CATCH(cav1P2CalibCoeff_->setVal(v));
+                    break;
+            }
+            break;
+        case 1:
+            switch(probe) {
+                case 0:    // cavity 1, probe 0
+                    CPSW_TRY_CATCH(cav2P1CalibCoeff_->setVal(v));
+                    break;
+                case 1:    // cavity 1, probe 1
+                    CPSW_TRY_CATCH(cav2P2CalibCoeff_->setVal(v));
+                    break;
+            }
+            break;
+    }
+}
+
+
+//
+//
+/* monitor for reference */
+//
+//
+
+double CpcavFwAdapt::getRefAmpl(int32_t *raw)
+{
+    double v;
+
+    CPSW_TRY_CATCH(rfRefAmpl_->getVal((uint32_t*) raw));
+    v = fixed18_17(*raw);
+
+    return v;
+}
+
+double CpcavFwAdapt::getRefPhase(int32_t *raw)
+{
+    double v;
+
+    CPSW_TRY_CATCH(rfRefPhase_->getVal((uint32_t*) raw));
+    v = 180. * fixed18_17(*raw);
+
+    return v;
+}
+
+double CpcavFwAdapt::getRefI(int32_t *raw)
+{
+    double v;
+
+    CPSW_TRY_CATCH(rfRefI_->getVal((uint32_t*) raw));
+    v = fixed18_17(*raw);
+
+    return v;
+}
+
+double CpcavFwAdapt::getRefQ(int32_t *raw)
+{
+    double v;
+
+    CPSW_TRY_CATCH(rfRefQ_->getVal((uint32_t*) raw));
+    v = fixed18_17(*raw);
+
+    return v;
+}
+
+
+
+//
+//
+/* monitor for cavity and probe */
+//
+//
+
+double CpcavFwAdapt::getIfAmpl(int cavity, int probe, int32_t *raw)
+{
+    double v;
+
+    switch(cavity) {
+        case 0:
+            switch(probe) {
+                case 0:    // cavity 0, probe 0
+                    CPSW_TRY_CATCH(cav1P1IfAmpl_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 0, probe 1
+                    CPSW_TRY_CATCH(cav1P2IfAmpl_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+        case 1:
+            switch(probe) {
+                case 0:    // cavity 1, probe 0
+                    CPSW_TRY_CATCH(cav2P1IfAmpl_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 1, probe 1
+                    CPSW_TRY_CATCH(cav2P2IfAmpl_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+    }
+
+    v = fixed18_17(*raw);
+
+    return v;
+}
+
+double CpcavFwAdapt::getIfPhase(int cavity, int probe, int32_t *raw)
+{
+    double v;
+
+    switch(cavity) {
+        case 0:
+            switch(probe) {
+                case 0:    // cavity 0, probe 0
+                    CPSW_TRY_CATCH(cav1P1IfPhase_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 0, probe 1
+                    CPSW_TRY_CATCH(cav1P2IfPhase_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+        case 1:
+            switch(probe) {
+                case 0:    // cavity 1, probe 0
+                    CPSW_TRY_CATCH(cav2P1IfPhase_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 1, probe 1
+                    CPSW_TRY_CATCH(cav2P2IfPhase_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+    }
+
+    v = 180. * fixed18_17(*raw);
+
+    return v;
+}
+
+double CpcavFwAdapt::getIfI(int cavity, int probe, int32_t *raw)
+{
+    double v;
+
+    switch(cavity) {
+        case 0:
+            switch(probe) {
+                case 0:    // cavity 0, probe 0
+                    CPSW_TRY_CATCH(cav1P1IfI_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 0, probe 1
+                    CPSW_TRY_CATCH(cav1P2IfI_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+        case 1:
+            switch(probe) {
+                case 0:    // cavity 1, probe 0
+                    CPSW_TRY_CATCH(cav2P1IfI_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 1, probe 1
+                    CPSW_TRY_CATCH(cav2P2IfI_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+    }
+
+    v = fixed18_17(*raw);
+
+    return v;
+}
+
+double CpcavFwAdapt::getIfQ(int cavity, int probe, int32_t *raw)
+{
+    double v;
+
+    switch(cavity) {
+        case 0:
+            switch(probe) {
+                case 0:    // cavity 0, probe 0
+                    CPSW_TRY_CATCH(cav1P1IfQ_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 0, probe 1
+                    CPSW_TRY_CATCH(cav1P2IfQ_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+        case 1:
+            switch(probe) {
+                case 0:    // cavity 1, probe 0
+                    CPSW_TRY_CATCH(cav2P1IfQ_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 1, probe 1
+                    CPSW_TRY_CATCH(cav2P2IfQ_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+    }
+  
+    v = fixed18_17(*raw);
+
+    return v;
+}
+
+double CpcavFwAdapt::getDCReal(int cavity, int probe, int32_t *raw)
+{
+    double v;
+
+    switch(cavity) {
+        case 0:
+            switch(probe) {
+                case 0:    // cavity 0, probe 0
+                    CPSW_TRY_CATCH(cav1P1DCReal_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 0, probe 1
+                    CPSW_TRY_CATCH(cav1P2DCReal_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+        case 1:
+            switch(probe) {
+                case 0:    // cavity 1, probe 0
+                    CPSW_TRY_CATCH(cav2P1DCReal_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 1, probe 1
+                    CPSW_TRY_CATCH(cav2P2DCReal_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+    }
+
+    v = fixed21_19(*raw);
+
+    return v;
+}
+
+double CpcavFwAdapt::getDCImage(int cavity, int probe, int32_t *raw)
+{
+    double v;
+
+    switch(cavity) {
+        case 0:
+            switch(probe) {
+                case 0:    // cavity 0, probe 0
+                    CPSW_TRY_CATCH(cav1P1DCImage_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 0, probe 1
+                    CPSW_TRY_CATCH(cav1P2DCImage_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+        case 1:
+            switch(probe) {
+                case 0:    // cavity 1, probe 0
+                    CPSW_TRY_CATCH(cav2P1DCImage_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 1, probe 1
+                    CPSW_TRY_CATCH(cav2P2DCImage_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+    }
+
+    v = fixed21_19(*raw);
+
+    return v;
+}
+
+double CpcavFwAdapt::getDCFreq(int cavity, int probe, int32_t *raw)
+{
+    double v;
+
+    switch(cavity) {
+        case 0:
+            switch(probe) {
+                case 0:    // cavity 0, probe 0
+                    CPSW_TRY_CATCH(cav1P1DCFreq_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 0, probe 1
+                    CPSW_TRY_CATCH(cav1P2DCFreq_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+        case 1:
+            switch(probe) {
+                case 0:    // cavity 1, probe 0
+                    CPSW_TRY_CATCH(cav2P1DCFreq_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 1, probe 1
+                    CPSW_TRY_CATCH(cav2P2DCFreq_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+    }
+
+    v = fixed26_0(*raw);
+
+    return v;
+}
+
+double CpcavFwAdapt::getIntegI(int cavity, int probe, int32_t *raw)
+{
+    double v;
+
+    switch(cavity) {
+        case 0:
+            switch(probe) {
+                case 0:    // cavity 0, probe 0
+                    CPSW_TRY_CATCH(cav1P1IntegI_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 0, probe 1
+                    CPSW_TRY_CATCH(cav1P2IntegI_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+        case 1:
+            switch(probe) {
+                case 0:    // cavity 1, probe 0
+                    CPSW_TRY_CATCH(cav2P1IntegI_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 1, probe 1
+                    CPSW_TRY_CATCH(cav2P2IntegI_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+    }
+
+    v = fixed18_17(*raw);
+
+    return v;
+}
+
+double CpcavFwAdapt::getIntegQ(int cavity, int probe, int32_t *raw)
+{
+    double v;
+
+    switch(cavity) {
+        case 0:
+            switch(probe) {
+                case 0:    // cavity 0, probe 0
+                    CPSW_TRY_CATCH(cav1P1IntegQ_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 0, probe 1
+                    CPSW_TRY_CATCH(cav1P2IntegQ_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+        case 1:
+            switch(probe) {
+                case 0:    // cavity 1, probe 0
+                    CPSW_TRY_CATCH(cav2P1IntegQ_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 1, probe 1
+                    CPSW_TRY_CATCH(cav2P2IntegQ_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+    }
+
+    v = fixed18_17(*raw);
+
+    return v;
+}
+
+double CpcavFwAdapt::getOutPhase(int cavity, int probe, int32_t *raw)
+{
+    double v;
+
+    switch(cavity) {
+        case 0:
+            switch(probe) {
+                case 0:    // cavity 0, probe 0
+                    CPSW_TRY_CATCH(cav1P1OutPhase_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 0, probe 1
+                    CPSW_TRY_CATCH(cav1P2OutPhase_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+        case 1:
+            switch(probe) {
+                case 0:    // cavity 1, probe 0
+                    CPSW_TRY_CATCH(cav2P1OutPhase_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 1, probe 1
+                    CPSW_TRY_CATCH(cav2P2OutPhase_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+    }
+
+    v = 180. * fixed18_17(*raw);
+
+    return v;
+}
+
+double CpcavFwAdapt::getOutAmpl(int cavity, int probe, int32_t *raw)
+{
+    double v;
+
+    switch(cavity) {
+        case 0:
+            switch(probe) {
+                case 0:    // cavity 0, probe 0
+                    CPSW_TRY_CATCH(cav1P1OutAmpl_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 0, probe 1
+                    CPSW_TRY_CATCH(cav1P2OutAmpl_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+        case 1:
+            switch(probe) {
+                case 0:    // cavity 1, probe 0
+                    CPSW_TRY_CATCH(cav2P1OutAmpl_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 1, probe 1
+                    CPSW_TRY_CATCH(cav2P2OutAmpl_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+    }
+
+    v = fixed18_17(*raw);
+
+    return v;
+}
+
+double CpcavFwAdapt::getCompI(int cavity, int probe, int32_t *raw)
+{
+    double v;
+
+    switch(cavity) {
+        case 0:
+            switch(probe) {
+                case 0:    // cavity 0, probe 0
+                    CPSW_TRY_CATCH(cav1P1CompI_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 0, probe 1
+                    CPSW_TRY_CATCH(cav1P2CompI_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+        case 1:
+            switch(probe) {
+                case 0:    // cavity 1, probe 0
+                    CPSW_TRY_CATCH(cav2P1CompI_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 1, probe 1
+                    CPSW_TRY_CATCH(cav2P2CompI_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+    }
+
+    v = fixed18_17(*raw);
+
+    return v;
+}
+
+double CpcavFwAdapt::getCompQ(int cavity, int probe, int32_t *raw)
+{
+    double v = 0.;
+
+    switch(cavity) {
+        case 0:
+            switch(probe) {
+                case 0:    // cavity 0, probe 0
+                    CPSW_TRY_CATCH(cav1P1CompQ_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 0, probe 1
+                    CPSW_TRY_CATCH(cav1P2CompQ_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+        case 1:
+            switch(probe) {
+                case 0:    // cavity 1, probe 0
+                    CPSW_TRY_CATCH(cav2P1CompQ_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 1, probe 1
+                    CPSW_TRY_CATCH(cav2P2CompQ_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+    }
+
+    v = fixed18_17(*raw);
+
+    return v;
+}
+
+double CpcavFwAdapt::getCompPhase(int cavity, int probe, int32_t *raw)
+{
+    double v;
+
+    switch(cavity) {
+        case 0:
+            switch(probe) {
+                case 0:    // cavity 0, probe 0
+                    CPSW_TRY_CATCH(cav1P1CompPhase_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 0, probe 1
+                    CPSW_TRY_CATCH(cav1P2CompPhase_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+        case 1:
+            switch(probe) {
+                case 0:    // cavity 1, probe 0
+                    CPSW_TRY_CATCH(cav2P1CompPhase_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 1, probe 1
+                    CPSW_TRY_CATCH(cav2P2CompPhase_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+    }
+
+    v = 180. * fixed18_17(*raw);
+
+    return v;
+}
+
+
