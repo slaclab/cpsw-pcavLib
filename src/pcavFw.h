@@ -11,6 +11,7 @@ class IpcavFw : public virtual IEntry {
 public:
     static pcavFw create(Path p);
 
+    virtual void getVersion(int32_t *version) = 0;
     virtual void setRefSel(uint32_t channel) = 0;
     virtual void setRefWindowStart(uint32_t start) = 0;
     virtual void setRefWindowEnd(uint32_t end) = 0;

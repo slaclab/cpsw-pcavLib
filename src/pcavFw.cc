@@ -72,6 +72,8 @@ private:
 protected:
     Path pPcavReg_;      // pcav register path
 
+    ScalVal_RO    version_;      // pcav firmware version
+
     /* rf reference */
     ScalVal_RO    rfRefAmpl_;    // RF reference amplitude,  fixed point 18.17
     ScalVal_RO    rfRefPhase_;   // RF reference phase, fixed point 18.17
@@ -180,6 +182,8 @@ protected:
 public:
     CpcavFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryImpl> ie);
 
+    virtual void getVersion(int32_t *version);
+
     /* config for reference */
     virtual void setRefSel(uint32_t channel);
     virtual void setRefWindowStart(uint32_t start);
@@ -224,6 +228,8 @@ pcavFw IpcavFw::create(Path p)
 CpcavFwAdapt::CpcavFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryImpl> ie):
     IEntryAdapt(k, p, ie),
     pPcavReg_(p->findByName("")),
+
+    version_(        IScalVal_RO::create(pPcavReg_->findByName("version"))),
 
     /* rf reference */
     rfRefAmpl_(      IScalVal_RO::create(pPcavReg_->findByName("rfRefAmpl"))),
@@ -334,6 +340,11 @@ CpcavFwAdapt::CpcavFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryImpl> ie)
     cav2P2CalibCoeff_(  IScalVal   ::create(pPcavReg_->findByName("cav2P2CalibCoeff")))
 
 {
+}
+
+void CpcavFwAdapt::getVersion(int32_t *version)
+{
+    CPSW_TRY_CATCH(version_->getVal((uint32_t*) version));
 }
 
 //
