@@ -54,7 +54,7 @@ dacSigGenFw IdacSigGenFw::create(Path p)
 
 CdacSigGenFwAdapt::CdacSigGenFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryImpl> ie):
     IEntryAdapt(k, p, ie),
-    _pDacSigGen(p->findByName("mmio/AppTop/DacSigGen")),
+    _pDacSigGen(p->findByName("AppTop/DacSigGen")),
     enableMask_(IScalVal::create(_pDacSigGen->findByName("EnableMask"))),
     modeMask_(  IScalVal::create(_pDacSigGen->findByName("ModeMask"))),
     signFormat_(IScalVal::create(_pDacSigGen->findByName("SignFormat"))),
