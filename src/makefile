@@ -10,7 +10,7 @@ include $(CPSW_DIR)/defs.mak
 INSTALL_DIR=../
 
 HEADERS += pcavFw.h
-HEADERS += dacSigGen.h
+HEADERS += dacSigGenFw.h
 
 pcavLib_SRCS  = pcavFw.cc
 pcavLib_SRCS += dacSigGenFw.cc
