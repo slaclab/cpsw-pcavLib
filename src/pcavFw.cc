@@ -23,18 +23,18 @@
 
 inline static double fixed18_17(uint32_t v)
 {
-    double out = (double) (v & 0x0003ffff) / (double) (0x0001ffff);
+    double out = (double) (v & 0x0003ffff) / (double) (0x00020000);
 
-    if(v & 0x00020000) out -= 1.;
+    if(out >= 1.) out -= 2.;
 
     return out;
 }
 
 inline static double fixed21_19(uint32_t v)
 {
-    double out = (double) (v & 0x001fffff) / (double) (0x0007ffff);
+    double out = (double) (v & 0x001fffff) / (double) (0x00080000);
 
-    if(v & 0x00100000) out -= 2.;
+    if(out >= 2.) out -= 4.;
 
     return out;
 }
@@ -43,7 +43,7 @@ inline static double fixed26_0(uint32_t v)
 {
     double out = (double) (v & 0x03ffffff);
 
-    if(v & 0x02000000) out -= (double) (0x02000000);
+    if(out >= (double) 0x02000000) out -= (double) (0x04000000);
 
     return out;
 }
@@ -61,7 +61,6 @@ inline static uint32_t ufixed29_29(double v)
 
     return out;
 }
-
 
 
 class CpcavFwAdapt;
