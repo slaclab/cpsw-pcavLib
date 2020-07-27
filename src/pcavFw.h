@@ -16,7 +16,7 @@ public:
     virtual void setRefWindowStart(uint32_t start) = 0;
     virtual void setRefWindowEnd(uint32_t end) = 0;
 
-    virtual void setNCO(int cavity, double v) = 0;
+    virtual uint32_t setNCO(int cavity, double v) = 0;
     virtual void setChanSel(int cavity, int probe, uint32_t channel) = 0;
     virtual void setWindowStart(int cavity, int probe, uint32_t start) = 0;
     virtual void setWindowEnd(int cavity, int probe, uint32_t end) = 0;

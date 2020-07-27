@@ -197,7 +197,7 @@ public:
     virtual void setRefWindowEnd(uint32_t end);
 
     /* config for cavity and probe */
-    virtual void setNCO(int cavity, double v);
+    virtual uint32_t setNCO(int cavity, double v);
     virtual void setChanSel(int cavity, int probe, uint32_t channel);
     virtual void setWindowStart(int cavity, int probe, uint32_t start);
     virtual void setWindowEnd(int cavity, int probe, uint32_t end);
@@ -381,7 +381,7 @@ void CpcavFwAdapt::setRefWindowEnd(uint32_t end)
 //
 //
 
-void CpcavFwAdapt::setNCO(int cavity, double v)
+uint32_t CpcavFwAdapt::setNCO(int cavity, double v)
 {
     uint32_t  out = nco(v);
 
@@ -393,6 +393,8 @@ void CpcavFwAdapt::setNCO(int cavity, double v)
             CPSW_TRY_CATCH(cav2NCOPhaseAdj_->setVal(out));
             break;
     }
+
+    return out;
 }
 
 
