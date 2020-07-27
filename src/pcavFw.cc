@@ -63,6 +63,14 @@ inline static uint32_t ufixed29_29(double v)
 }
 
 
+inline static uint32_t nco(double v)
+{
+    int32_t out = (int32_t) ((v / 1.7E+7) * (double)((uint64_t)0x1<<32));
+    
+    return (uint32_t) out;
+    
+}
+
 class CpcavFwAdapt;
 typedef shared_ptr<CpcavFwAdapt> pcavFwAdapt;
 
@@ -375,7 +383,7 @@ void CpcavFwAdapt::setRefWindowEnd(uint32_t end)
 
 void CpcavFwAdapt::setNCO(int cavity, double v)
 {
-    uint32_t  out = ufixed29_29(v);
+    uint32_t  out = nco(v);
 
     switch(cavity) {
         case 0:    // cavity 0
