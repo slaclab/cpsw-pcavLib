@@ -1,2 +1,7 @@
+R1.0.0    Aug  06, 2020     Kukhee Kim (khkim)
+               Re-shuffling register map
+               - adding latched registers
+               - change data conversion
+
 R0.0.0    July 15, 2020     Kukhee Kim (khkim)
                Initial Release for PCAV firmware API layer
