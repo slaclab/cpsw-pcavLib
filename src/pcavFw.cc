@@ -66,8 +66,7 @@ protected:
     ScalVal_RO    rfRefI_;       // RF reference I, fixed point 18.17
     ScalVal_RO    rfRefQ_;       // RF reference Q, fixed point 18.17
     ScalVal       rfRefSel_;     // RF reference selection, unsigned fixed 4.0
-    ScalVal       refWindowStart_;      // Integration window start for reference, unsigned fixed 16.0
-    ScalVal       refWindowStop_;       // Integration window stop for reference,  unsigned fixed 16.0
+
     
     /* cavity 1 */
     /* probe 1 */
@@ -178,8 +177,7 @@ public:
 
     /* config for reference */
     virtual void setRefSel(uint32_t channel);
-    virtual void setRefWindowStart(uint32_t start);
-    virtual void setRefWindowEnd(uint32_t end);
+
 
     /* config for cavity and probe */
     virtual uint32_t setNCO(int cavity, double v);
@@ -230,8 +228,7 @@ CpcavFwAdapt::CpcavFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryImpl> ie)
     rfRefI_(         IScalVal_RO::create(pPcavReg_->findByName("rfRefI"))),
     rfRefQ_(         IScalVal_RO::create(pPcavReg_->findByName("rfRefQ"))),
     rfRefSel_(       IScalVal   ::create(pPcavReg_->findByName("rfRefSel"))),
-    refWindowStart_( IScalVal   ::create(pPcavReg_->findByName("refWindowStart"))),
-    refWindowStop_(  IScalVal   ::create(pPcavReg_->findByName("refWindowStop"))),
+
 
     /* cavity 1 */
     /* probe 1 */
@@ -357,15 +354,6 @@ void CpcavFwAdapt::setRefSel(uint32_t channel)
     CPSW_TRY_CATCH(rfRefSel_->setVal(channel));
 }
 
-void CpcavFwAdapt::setRefWindowStart(uint32_t start)
-{
-    CPSW_TRY_CATCH(refWindowStart_->setVal(start));
-}
-
-void CpcavFwAdapt::setRefWindowEnd(uint32_t end)
-{
-    CPSW_TRY_CATCH(refWindowStop_->setVal(end));
-}
 
 //
 //
