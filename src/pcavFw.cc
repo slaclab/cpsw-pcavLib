@@ -67,6 +67,8 @@ protected:
     ScalVal_RO    rfRefQ_;       // RF reference Q, fixed point 18.17
     ScalVal       rfRefSel_;     // RF reference selection, unsigned fixed 4.0
 
+    ScalVal       wfDataSel_[7];    // wfDataSelector
+
     
     /* cavity 1 */
     /* probe 1 */
@@ -178,6 +180,8 @@ public:
     /* config for reference */
     virtual void setRefSel(uint32_t channel);
 
+    /* Waveform data Selector */
+    virtual void setWfDataSel(int index, uint32_t sel);
 
     /* config for cavity and probe */
     virtual uint32_t setNCO(int cavity, double v);
@@ -336,6 +340,12 @@ CpcavFwAdapt::CpcavFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryImpl> ie)
     cav2P2CalibCoeff_(  IScalVal   ::create(pPcavReg_->findByName("cav2P2CalibCoeff")))
 
 {
+    char name[80];
+
+     for(int i = 0; i < 8; i++) {
+         sprintf(name, "wfData%dSel", i);
+         wfDataSel_[i] = IScalVal::create(pPcavReg_->findByName(name));
+     }
 }
 
 void CpcavFwAdapt::getVersion(int32_t *version)
@@ -354,6 +364,16 @@ void CpcavFwAdapt::setRefSel(uint32_t channel)
     CPSW_TRY_CATCH(rfRefSel_->setVal(channel));
 }
 
+//
+//
+/* waveform data selector */
+//
+//
+
+void CpcavFwAdapt::setWfDataSel(int index, uint32_t sel)
+{
+    CPSW_TRY_CATCH(wfDataSel_[index]->setVal(sel));
+}
 
 //
 //
