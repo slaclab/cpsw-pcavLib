@@ -67,7 +67,7 @@ protected:
     ScalVal_RO    rfRefQ_;       // RF reference Q, fixed point 18.17
     ScalVal       rfRefSel_;     // RF reference selection, unsigned fixed 4.0
 
-    ScalVal       wfDataSel_[7];    // wfDataSelector
+    ScalVal       wfDataSel_[8];    // wfDataSelector
 
     
     /* cavity 1 */
