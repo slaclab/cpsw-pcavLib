@@ -25,6 +25,8 @@ public:
     virtual void setFreqEvalEnd(int cavity, uint32_t end) = 0;
     virtual void setRegLatchPoint(int cavity, uint32_t point) = 0;
     virtual uint32_t setCalibCoeff(int cavity, int probe, double v) = 0;
+    virtual uint32_t setPhaseOffset(int cavity, int probe, double v) = 0;
+    virtual uint32_t setWeight(int cavity, int probe, double v) = 0;
 
     virtual double getRefAmpl(int32_t *raw) = 0;
     virtual double getRefPhase(int32_t *raw) = 0;

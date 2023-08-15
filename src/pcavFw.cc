@@ -91,6 +91,8 @@ protected:
     ScalVal_RO    cav1P1CompPhase_;     // Comparison phase for cavity 1, probe 1, fixed 18.17
 
     ScalVal       cav1P1CalibCoeff_;    // calibration coefficient (TBD)
+    ScalVal       cav1P1PhaseOffset_;   // Phase Offset (TBD)
+    ScalVal       cav1P1Weight_;        // Weights (TBD)
     // NCO
     ScalVal       cav1NCOPhaseAdj_;    // NCO phase adjust for cavity 1, unsigned fixed 29.29
 
@@ -119,6 +121,8 @@ protected:
     ScalVal       cav1RegLatchPt_;
 
     ScalVal       cav1P2CalibCoeff_;    // calibration coefficient (TBD)
+    ScalVal       cav1P2PhaseOffset_;   // Phase Offset (TBD)
+    ScalVal       cav1P2Weight_;        // Weights (TBD)
 
     /* cavity 2 */
     /* probe 1 */
@@ -141,6 +145,8 @@ protected:
     ScalVal_RO    cav2P1CompPhase_;     // Comparison phase for cavity 1, probe 1, fixed 18.17
 
     ScalVal       cav2P1CalibCoeff_;    // calibration coefficient (TBD)
+    ScalVal       cav2P1PhaseOffset_;   // Phase Offset (TBD)
+    ScalVal       cav2P1Weight_;        // Weights (TBD)
     // NCO
     ScalVal       cav2NCOPhaseAdj_;    // NCO phase adjust for cavity 2, unsigned fixed 29.29
 
@@ -169,6 +175,8 @@ protected:
     ScalVal       cav2RegLatchPt_;
 
     ScalVal       cav2P2CalibCoeff_;    // calibration coefficient (TBD)
+    ScalVal       cav2P2PhaseOffset_;   // Phase Offset (TBD)
+    ScalVal       cav2P2Weight_;        // Weights (TBD)
 
 
 
@@ -192,6 +200,8 @@ public:
     virtual void setFreqEvalEnd(int cavity, uint32_t end);
     virtual void setRegLatchPoint(int cavity, uint32_t point);
     virtual uint32_t setCalibCoeff(int cavity, int probe, double v);
+    virtual uint32_t setPhaseOffset(int cavity, int probe, double v);
+    virtual uint32_t setWeight(int cavity, int probe, double v);
 
     /* monitor for reference */
     virtual double getRefAmpl(int32_t *raw);
@@ -255,6 +265,8 @@ CpcavFwAdapt::CpcavFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryImpl> ie)
     cav1P1CompPhase_(   IScalVal_RO::create(pPcavReg_->findByName("cav1P1CompPhase"))),
 
     cav1P1CalibCoeff_(  IScalVal   ::create(pPcavReg_->findByName("cav1P1CalibCoeff"))),
+    cav1P1PhaseOffset_(  IScalVal   ::create(pPcavReg_->findByName("Cavity0Probe0PhaseOffset"))),
+    cav1P1Weight_(  IScalVal   ::create(pPcavReg_->findByName("Cavity0Probe0Weight"))),
 
     /* NCO for cavity 1 */
 
@@ -285,6 +297,8 @@ CpcavFwAdapt::CpcavFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryImpl> ie)
     cav1RegLatchPt_(    IScalVal   ::create(pPcavReg_->findByName("cav1RegLatchPt"))),
 
     cav1P2CalibCoeff_(  IScalVal   ::create(pPcavReg_->findByName("cav1P2CalibCoeff"))),
+    cav1P2PhaseOffset_(  IScalVal   ::create(pPcavReg_->findByName("Cavity0Probe1PhaseOffset"))),
+    cav1P2Weight_(  IScalVal   ::create(pPcavReg_->findByName("Cavity0Probe1Weight"))),
 
 
     /* cavity 2 */
@@ -308,6 +322,8 @@ CpcavFwAdapt::CpcavFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryImpl> ie)
     cav2P1CompPhase_(   IScalVal_RO::create(pPcavReg_->findByName("cav2P1CompPhase"))),
 
     cav2P1CalibCoeff_(  IScalVal   ::create(pPcavReg_->findByName("cav2P1CalibCoeff"))),
+    cav2P1PhaseOffset_(  IScalVal   ::create(pPcavReg_->findByName("Cavity1Probe0PhaseOffset"))),
+    cav2P1Weight_(  IScalVal   ::create(pPcavReg_->findByName("Cavity1Probe0Weight"))),
 
     /* NCO for cavity 2 */
 
@@ -337,7 +353,9 @@ CpcavFwAdapt::CpcavFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryImpl> ie)
 
     cav2RegLatchPt_(    IScalVal   ::create(pPcavReg_->findByName("cav2RegLatchPt"))),
 
-    cav2P2CalibCoeff_(  IScalVal   ::create(pPcavReg_->findByName("cav2P2CalibCoeff")))
+    cav2P2CalibCoeff_(  IScalVal   ::create(pPcavReg_->findByName("cav2P2CalibCoeff"))),
+    cav2P2PhaseOffset_(  IScalVal   ::create(pPcavReg_->findByName("Cavity1Probe1PhaseOffset"))),
+    cav2P2Weight_(  IScalVal   ::create(pPcavReg_->findByName("Cavity1Probe1Weight")))
 
 {
     char name[80];
@@ -540,6 +558,64 @@ uint32_t CpcavFwAdapt::setCalibCoeff(int cavity, int probe, double v)
             break;
     }
 
+    return out;
+}
+
+uint32_t CpcavFwAdapt::setPhaseOffset(int cavity, int probe, double v)
+{
+    uint32_t out = (v * ((1<< 15)-1));
+
+    switch(cavity) {
+        case 0:
+            switch(probe) {
+                case 0:    // cavity 0, probe 0
+                    CPSW_TRY_CATCH(cav1P1PhaseOffset_->setVal(out));
+                    break;
+                case 1:    // cavity 0, probe 1
+                    CPSW_TRY_CATCH(cav1P2PhaseOffset_->setVal(out));
+                    break;
+            }
+            break;
+        case 1:
+            switch(probe) {
+                case 0:    // cavity 1, probe 0
+                    CPSW_TRY_CATCH(cav2P1PhaseOffset_->setVal(out));
+                    break;
+                case 1:    // cavity 1, probe 1
+                    CPSW_TRY_CATCH(cav2P2PhaseOffset_->setVal(out));
+                    break;
+            }
+            break;
+    }
+    return out;
+}
+
+uint32_t CpcavFwAdapt::setWeight(int cavity, int probe, double v)
+{
+    uint32_t out = (v * ((1<< 15)-1));
+
+    switch(cavity) {
+        case 0:
+            switch(probe) {
+                case 0:    // cavity 0, probe 0
+                    CPSW_TRY_CATCH(cav1P1Weight_->setVal(out));
+                    break;
+                case 1:    // cavity 0, probe 1
+                    CPSW_TRY_CATCH(cav1P2Weight_->setVal(out));
+                    break;
+            }
+            break;
+        case 1:
+            switch(probe) {
+                case 0:    // cavity 1, probe 0
+                    CPSW_TRY_CATCH(cav2P1Weight_->setVal(out));
+                    break;
+                case 1:    // cavity 1, probe 1
+                    CPSW_TRY_CATCH(cav2P2Weight_->setVal(out));
+                    break;
+            }
+            break;
+    }
     return out;
 }
 
