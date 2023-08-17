@@ -40,7 +40,8 @@
 #define _FIX_18_15(V) \
 (((V) & 0x20000) ? ((double)(V) - (double)(0x40000))/(double)(0x8000):(double)(V)/(double)(0x8000))
 
-
+#define _FIX_2_1(V) \
+(double)(V)/(double)(0x2))
 
 inline static uint32_t nco(double v)
 {
@@ -57,6 +58,7 @@ class CpcavFwAdapt : public IpcavFw, public IEntryAdapt {
 private:
 protected:
     Path pPcavReg_;      // pcav register path
+    Path pDiagBus_;      // pcav register path
 
     ScalVal_RO    version_;      // pcav firmware version
 
@@ -232,7 +234,8 @@ pcavFw IpcavFw::create(Path p)
 
 CpcavFwAdapt::CpcavFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryImpl> ie):
     IEntryAdapt(k, p, ie),
-    pPcavReg_(p->findByName("")),
+    pPcavReg_(p->findByName("AppTop/AppCore/Sysgen/PcavReg")),
+    pDiagBus_(p->findByName("AppTop/AppCore/AppDiagnBus")),
 
     version_(        IScalVal_RO::create(pPcavReg_->findByName("version"))),
 
@@ -264,9 +267,9 @@ CpcavFwAdapt::CpcavFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryImpl> ie)
 
     cav1P1CompPhase_(   IScalVal_RO::create(pPcavReg_->findByName("cav1P1CompPhase"))),
 
-    cav1P1CalibCoeff_(  IScalVal   ::create(pPcavReg_->findByName("cav1P1CalibCoeff"))),
-    cav1P1PhaseOffset_(  IScalVal   ::create(pPcavReg_->findByName("Cavity0Probe0PhaseOffset"))),
-    cav1P1Weight_(  IScalVal   ::create(pPcavReg_->findByName("Cavity0Probe0Weight"))),
+    cav1P1CalibCoeff_(  IScalVal::create(pPcavReg_->findByName("cav1P1CalibCoeff"))),
+    cav1P1PhaseOffset_( IScalVal::create(pDiagBus_->findByName("Cavity0Probe0PhaseOffset"))),
+    cav1P1Weight_(      IScalVal::create(pDiagBus_->findByName("Cavity0Probe0Weight"))),
 
     /* NCO for cavity 1 */
 
@@ -296,9 +299,9 @@ CpcavFwAdapt::CpcavFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryImpl> ie)
 
     cav1RegLatchPt_(    IScalVal   ::create(pPcavReg_->findByName("cav1RegLatchPt"))),
 
-    cav1P2CalibCoeff_(  IScalVal   ::create(pPcavReg_->findByName("cav1P2CalibCoeff"))),
-    cav1P2PhaseOffset_(  IScalVal   ::create(pPcavReg_->findByName("Cavity0Probe1PhaseOffset"))),
-    cav1P2Weight_(  IScalVal   ::create(pPcavReg_->findByName("Cavity0Probe1Weight"))),
+    cav1P2CalibCoeff_(  IScalVal::create(pPcavReg_->findByName("cav1P2CalibCoeff"))),
+    cav1P2PhaseOffset_( IScalVal::create(pDiagBus_->findByName("Cavity0Probe1PhaseOffset"))),
+    cav1P2Weight_(      IScalVal::create(pDiagBus_->findByName("Cavity0Probe1Weight"))),
 
 
     /* cavity 2 */
@@ -322,8 +325,8 @@ CpcavFwAdapt::CpcavFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryImpl> ie)
     cav2P1CompPhase_(   IScalVal_RO::create(pPcavReg_->findByName("cav2P1CompPhase"))),
 
     cav2P1CalibCoeff_(  IScalVal   ::create(pPcavReg_->findByName("cav2P1CalibCoeff"))),
-    cav2P1PhaseOffset_(  IScalVal   ::create(pPcavReg_->findByName("Cavity1Probe0PhaseOffset"))),
-    cav2P1Weight_(  IScalVal   ::create(pPcavReg_->findByName("Cavity1Probe0Weight"))),
+    cav2P1PhaseOffset_( IScalVal::create(pDiagBus_->findByName("Cavity1Probe0PhaseOffset"))),
+    cav2P1Weight_(      IScalVal::create(pDiagBus_->findByName("Cavity1Probe0Weight"))),
 
     /* NCO for cavity 2 */
 
@@ -353,9 +356,9 @@ CpcavFwAdapt::CpcavFwAdapt(Key &k, ConstPath p, shared_ptr<const CEntryImpl> ie)
 
     cav2RegLatchPt_(    IScalVal   ::create(pPcavReg_->findByName("cav2RegLatchPt"))),
 
-    cav2P2CalibCoeff_(  IScalVal   ::create(pPcavReg_->findByName("cav2P2CalibCoeff"))),
-    cav2P2PhaseOffset_(  IScalVal   ::create(pPcavReg_->findByName("Cavity1Probe1PhaseOffset"))),
-    cav2P2Weight_(  IScalVal   ::create(pPcavReg_->findByName("Cavity1Probe1Weight")))
+    cav2P2CalibCoeff_(  IScalVal::create(pPcavReg_->findByName("cav2P2CalibCoeff"))),
+    cav2P2PhaseOffset_( IScalVal::create(pDiagBus_->findByName("Cavity1Probe1PhaseOffset"))),
+    cav2P2Weight_(      IScalVal::create(pDiagBus_->findByName("Cavity1Probe1Weight")))
 
 {
     char name[80];
@@ -563,7 +566,7 @@ uint32_t CpcavFwAdapt::setCalibCoeff(int cavity, int probe, double v)
 
 uint32_t CpcavFwAdapt::setPhaseOffset(int cavity, int probe, double v)
 {
-    uint32_t out = (v * ((1<< 15)-1));
+    uint32_t out = (v * ((1<<15)-1));
 
     switch(cavity) {
         case 0:
@@ -592,7 +595,7 @@ uint32_t CpcavFwAdapt::setPhaseOffset(int cavity, int probe, double v)
 
 uint32_t CpcavFwAdapt::setWeight(int cavity, int probe, double v)
 {
-    uint32_t out = (v * ((1<< 15)-1));
+    uint32_t out = (v * (1<<1));
 
     switch(cavity) {
         case 0:
@@ -618,7 +621,6 @@ uint32_t CpcavFwAdapt::setWeight(int cavity, int probe, double v)
     }
     return out;
 }
-
 
 //
 //
