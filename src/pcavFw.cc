@@ -41,7 +41,7 @@
 (((V) & 0x20000) ? ((double)(V) - (double)(0x40000))/(double)(0x8000):(double)(V)/(double)(0x8000))
 
 #define _FIX_2_1(V) \
-(double)(V)/(double)(0x2))
+(double)(V)/(double)(0x2)
 
 inline static uint32_t nco(double v)
 {
@@ -224,6 +224,8 @@ public:
     virtual double getOutPhase(int cavity, int probe, int32_t *raw);
     virtual double getOutAmpl(int cavity, int probe, int32_t *raw);
     virtual double getCompPhase(int cavity, int probe, int32_t *raw);
+    virtual double getPhaseOffset(int cavity, int probe, int32_t *raw);
+    virtual double getWeight(int cavity, int probe, int32_t *raw);
 };
 
 
@@ -1066,4 +1068,68 @@ double CpcavFwAdapt::getCompPhase(int cavity, int probe, int32_t *raw)
     return v;
 }
 
+
+double CpcavFwAdapt::getPhaseOffset(int cavity, int probe, int32_t *raw)
+{
+    double v;
+
+    switch(cavity) {
+        case 0:
+            switch(probe) {
+                case 0:    // cavity 0, probe 0
+                    CPSW_TRY_CATCH(cav1P1PhaseOffset_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 0, probe 1
+                    CPSW_TRY_CATCH(cav1P2PhaseOffset_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+        case 1:
+            switch(probe) {
+                case 0:    // cavity 1, probe 0
+                    CPSW_TRY_CATCH(cav2P1PhaseOffset_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 1, probe 1
+                    CPSW_TRY_CATCH(cav2P2PhaseOffset_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+    }
+
+    v = 180. * _FIX_18_15(*raw);
+
+    return v;
+}
+
+double CpcavFwAdapt::getWeight(int cavity, int probe, int32_t *raw)
+{
+    double v;
+
+    switch(cavity) {
+        case 0:
+            switch(probe) {
+                case 0:    // cavity 0, probe 0
+                    CPSW_TRY_CATCH(cav1P1Weight_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 0, probe 1
+                    CPSW_TRY_CATCH(cav1P2Weight_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+        case 1:
+            switch(probe) {
+                case 0:    // cavity 1, probe 0
+                    CPSW_TRY_CATCH(cav2P1Weight_->getVal((uint32_t*) raw));
+                    break;
+                case 1:    // cavity 1, probe 1
+                    CPSW_TRY_CATCH(cav2P2Weight_->getVal((uint32_t*) raw));
+                    break;
+            }
+            break;
+    }
+
+    v = _FIX_2_1(*raw);
+
+    return v;
+}
 

@@ -45,6 +45,8 @@ public:
     virtual double getOutPhase(int cavity, int probe, int32_t *raw) = 0;
     virtual double getOutAmpl(int cavity, int probe, int32_t *raw) = 0;
     virtual double getCompPhase(int cavity, int probe, int32_t *raw) = 0;
+    virtual double getPhaseOffset(int cavity, int probe, int32_t *raw) = 0;
+    virtual double getWeight(int cavity, int probe, int32_t *raw) = 0;
     
 };
 
