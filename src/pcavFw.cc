@@ -41,7 +41,7 @@
 (((V) & 0x20000) ? ((double)(V) - (double)(0x40000))/(double)(0x8000):(double)(V)/(double)(0x8000))
 
 #define _FIX_2_1(V) \
-(double)(V)/(double)(0x2)
+(((V) & 0x2) ? ((double)(V) - (double)(0x4))/(double)(0x2):(double)(V)/(double)(0x2))
 
 inline static uint32_t nco(double v)
 {
