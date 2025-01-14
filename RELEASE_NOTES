@@ -1,3 +1,7 @@
+R1.2.1    Jan  10, 2024     Jeremy Lorelli (lorelli)
+               - Update to CPSW R4.5.2
+               - Use new PACKAGE_TOP/EPICS_PACKAGE_TOP pattern
+
 R1.2.0    Sep  01, 2023     Michael Skoufis (skoufis)
                - Add phase offset and weight interfaces 
 

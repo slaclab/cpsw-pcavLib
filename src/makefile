@@ -1,4 +1,14 @@
-CPSW_DIR=/afs/slac/g/lcls/package/cpsw/framework/R4.4.1/src
+ifeq ($(PACKAGE_TOP),)
+ifneq ($(EPICS_PACKAGE_TOP),)
+PACKAGE_TOP=$(EPICS_PACKAGE_TOP)
+else
+$(error PACKAGE_TOP or EPICS_PACKAGE_TOP must be provided by the environment or on the command line)
+endif
+endif
+
+CPSW_VERSION=R4.5.2
+
+CPSW_DIR=$(PACKAGE_TOP)/cpsw/framework/$(CPSW_VERSION)/src
 
 CCACHE_DISABLE=1
 
